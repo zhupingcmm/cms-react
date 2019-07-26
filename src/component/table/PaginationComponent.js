@@ -183,7 +183,7 @@ class PaginationComponent extends Component{
             | &nbsp;&nbsp;{totalNumber}  total items
           </div>
         </div>
-        < div  className="page">
+        <div  className="page">
           <Button label="Previous"
                   icon = {<LinkPreviousIcon/>}
                   plain={true}

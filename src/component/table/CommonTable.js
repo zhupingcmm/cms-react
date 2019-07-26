@@ -337,6 +337,10 @@ export class CommonTable extends React.Component {
         console.log('sd')
     };
 
+    onSortedChange =()=>{
+        console.log('asd')
+    };
+
     render() {
         const {
             toggleSelection,
@@ -403,14 +407,19 @@ export class CommonTable extends React.Component {
                 onScroll={this.onScrollX}>
                 {showData ? (
                     <div>
-                        <SelectTable
+                        <ReactTable
                             resolveData={resolveData(data)}
                             ref={r => (this.selectTable = r)}
                             manual
+                            onSortedChange={this.onSortedChange }
+                            defaultSorted={[
+                                {
+                                    id: "age",
+                                    desc: true
+                                }
+                            ]}
                             {...extraProps}
-                        />
-                        <PaginationComponent
-                            {...extraPropsForPagination}
+
                         />
                     </div>
 

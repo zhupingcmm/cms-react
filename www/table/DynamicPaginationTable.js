@@ -25,25 +25,51 @@ function getColumns(){
     ]
 }
 
-const requestData = (pageIndex,pageSize)=>{
+const requestData = (pageIndex,pageSize,sortId,ascending)=>{
     let data = makeData();
     return new Promise((resolve,reject)=>{
         let end = pageIndex * pageSize;
         let start = end - pageSize;
+        if(sortId){
+            data.sort((a,b)=>{
+                a = a[sortId];
+                b = b[sortId];
+
+                a = a === null || a === undefined ? '' : a;
+                b = b === null || b === undefined ? '' : b;
+                a = typeof a === 'string' ? a.toLocaleLowerCase() : a;
+                b = typeof b === 'string' ? b.toLocaleLowerCase() : b;
+                if(a > b){
+                    return 1
+                }
+                if(a < b){
+                    return -1
+                }
+                return 0
+            });
+
+            if(!ascending) {
+                data.reverse();
+            }
+
+        }
         let showData = data.slice(start,end);
         setTimeout(()=>resolve(showData),1000)
     })
 };
 
+
+
 export class DynamicPaginationTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: makeData(),
+            data: null,
             columns: getColumns(),
             totalNumber:5553,
             showSelected:true,
             dynamic:true,
+            ascending:true
         };
     }
 
@@ -55,18 +81,6 @@ export class DynamicPaginationTable extends React.Component {
         );
     }
 
-    handleChangeShowSelected =()=>{
-        this.setState({showSelected:!this.state.showSelected})
-    };
-
-    handleChangeDynamic =()=>{
-        this.setState({dynamic:!this.state.dynamic})
-    };
-
-    handleSelectPageSize =()=>{
-
-    };
-
     onPageChange = (pageIndex) =>{
         console.log(pageIndex);
         requestData(pageIndex,20).then(
@@ -76,9 +90,20 @@ export class DynamicPaginationTable extends React.Component {
         );
     };
 
+    onSortedChange = (currentPage, sortId)=>{
+        let {ascending} =  this.state;
+        requestData(1,20,sortId,ascending).then(
+            res=>{
+                this.setState({data:res,ascending:!this.state.ascending})
+            }
+        );
+
+    };
+
     render() {
         const {
-            onPageChange
+            onPageChange,
+            onSortedChange
         } = this;
         const {
             data,
@@ -92,7 +117,8 @@ export class DynamicPaginationTable extends React.Component {
             totalNumber,
             showSelected,
             onPageChange,
-            dynamic
+            dynamic,
+            onSortedChange
         };
         return (
             <Box>

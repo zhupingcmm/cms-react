@@ -63,6 +63,8 @@ function getColumns(){
     ]
 }
 
+
+
 export class Test extends React.Component {
     constructor(props) {
         super(props);
@@ -73,6 +75,10 @@ export class Test extends React.Component {
             showPagination:false
         };
     }
+
+    onSortedChange =(newSorted, column, shiftKey)=>{
+        console.log('asd')
+    };
 
     render() {
         const {
@@ -92,7 +98,8 @@ export class Test extends React.Component {
                     data={data}
                     columns={columns}
                     defaultPageSize={20}
-                    defaultSorted={[
+                    onSortedChange={this.onSortedChange }
+                    sorted={[
                         {
                             id: "age",
                             desc: true

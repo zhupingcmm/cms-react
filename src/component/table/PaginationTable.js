@@ -30,9 +30,9 @@ export class PaginationTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: null,
-            showData:null,
-            columns: null,
+            data: undefined,
+            showData:undefined,
+            columns: undefined,
             selection: [],
             selectAll: undefined,
             selectType: "checkbox",
@@ -45,6 +45,7 @@ export class PaginationTable extends React.Component {
             loading : false,
             showSelected:true,
             dynamic:false,
+            ascending:true,
             selected:{
                 number:0
             }
@@ -59,23 +60,34 @@ export class PaginationTable extends React.Component {
     };
 
     componentWillMount() {
+        //update showSelected
         if(this.props.showSelected){
             this.setState({showSelected:this.props.showSelected})
         }
+        //update dynamic
         if(this.props.dynamic){
             this.setState({dynamic:this.props.dynamic})
         }
     }
 
-
+    /**
+     * init table data and columns
+     */
     componentDidMount() {
-        /*
-          Make sure the data and columns have value
-        */
-        let data = getData(this.props.data);
-        let columns = this.props.columns;
-        let showData = this.getShowData(data,this.state.currentPage);
-        this.setState({ data, columns,showData});
+        //
+        let {dynamic, data, columns} = this.props;
+        let  showData;
+        if(data){
+            data = getData(data);
+            showData = this.getShowData(data,this.state.currentPage);
+        }
+
+        if(dynamic){
+            this.setState({columns, showData})
+        }else {
+            this.setState({data, columns, showData});
+        }
+
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -84,21 +96,11 @@ export class PaginationTable extends React.Component {
             this.setState({showSelected:nextProps.showSelected})
         }
 
-
-
-        if(this.state.showSelected){
-            if(this.state.dynamic){
-                let showData = getData(nextProps.data);
-                this.setState({showData,loading:false});
-            }
-
-        }else {
-            if(this.state.dynamic){
-                let showData = _.cloneDeep(nextProps.data);
-                this.setState({showData,loading:false})
-            }
+        // in dynamic mode table show data will be update from invoker
+        if(this.state.dynamic){
+            let showData = getData(nextProps.data);
+            this.setState({showData,loading:false});
         }
-
     }
 
     /**
@@ -261,7 +263,7 @@ export class PaginationTable extends React.Component {
             let showData = this.getShowData(this.state.data,pageIndex);
             this.setState({showData,loading:false});
         }else {
-            if(this.props.onPageChange !==undefined){
+            if(this.props.onPageChange){
                 this.props.onPageChange(pageIndex);
             }
         }
@@ -273,16 +275,52 @@ export class PaginationTable extends React.Component {
         }
     };
 
+    onSortedChange =(newSorted, column, shiftKey)=>{
+        //dynamic mode must implement onSortedChange method
+        this.setState({loading:true});
+        if(!this.state.dynamic){
+            if(this.props.onSortedChange){
+                this.props.onSortedChange(this.state.currentPage, column.id);
+            }else {
+                const {data,ascending} = this.state;
+                if(ascending){
+                    data.sort((a,b)=>{
+                        a = a[`${column.id}`];
+                        b = b[`${column.id}`];
+
+                        a = a === null || a === undefined ? '' : a;
+                        b = b === null || b === undefined ? '' : b;
+                        a = typeof a === 'string' ? a.toLocaleLowerCase() : a;
+                        b = typeof b === 'string' ? b.toLocaleLowerCase() : b;
+                        if(a > b){
+                            return 1
+                        }
+                        if(a < b){
+                            return -1
+                        }
+                        return 0
+                    });
+                }else {
+                    data.reverse();
+                }
+
+
+                let showData = this.getShowData(data,this.state.currentPage);
+
+                this.setState({data,showData,ascending:!this.state.ascending,loading:false});
+            }
+        }else {
+            if(this.props.onSortedChange){
+                this.props.onSortedChange(this.state.currentPage, column.id);
+            }
+        }
+
+    };
+
     getTable = (showSelected, extraProps)=>{
         if(!showSelected){
             return <ReactTable
                 manual
-                defaultSorted={[
-                    {
-                        id: "firstName",
-                        desc: true
-                    }
-                ]}
                 {...extraProps}
             />
         }
@@ -290,12 +328,6 @@ export class PaginationTable extends React.Component {
         return <SelectTable
                 ref={r => (this.selectTable = r)}
                 manual
-                defaultSorted={[
-                    {
-                        id: "firstName",
-                        desc: true
-                    }
-                ]}
                 {...extraProps}/>
             };
 
@@ -305,8 +337,10 @@ export class PaginationTable extends React.Component {
             toggleAll,
             isSelected,
             onPageChange,
-            resolveData
+            resolveData,
+            onSortedChange
         } = this;
+
 
         const {
             showData,
@@ -338,7 +372,8 @@ export class PaginationTable extends React.Component {
             defaultPageSize,
             pageSizeOptions,
             showPagination,
-            loading
+            loading,
+            onSortedChange
         };
 
         let table = this.getTable(showSelected, extraProps);

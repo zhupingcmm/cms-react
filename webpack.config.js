@@ -27,13 +27,29 @@ module.exports={
                 ]
             },
             {
-                test:/\.less$/,
+                test: /\.scss$/,
                 use: [
-                    'style-loader',
-                    'css-loader',
-                    'less-loader'
-                ]
+                    { loader: 'style-loader' },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                        },
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true,
+                            outputStyle: 'compressed',
+                            includePaths: [
+                                './node_modules',
+                                './node_modules/@micro-focus',
+                            ],
+                        },
+                    },
+                ],
             },
+
             // {
             //     test:/\.(png|jpg|gif|jpeg)/,
             //     use: [
@@ -61,6 +77,10 @@ module.exports={
             }
 
         ]
+    },
+    resolve: {
+        extensions: ['.js', '.scss', '.css', '.json'],
+        modules: [path.resolve(__dirname, 'www'), 'node_modules', 'node_modules/@micro-focus'],
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),

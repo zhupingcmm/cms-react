@@ -1,30 +1,12 @@
-let arr =[];
-console.log(typeof 1);
-console.log(arr instanceof Array);
-let a =1;
-b =a;
-console.log(b);
-a=3;
-console.log(b);
-
-let selected = {
-    data:[],
-    showData:[],
-    currentPage:1,
-    number:0
-};
-
-
-
-let state = {
-    selected:{
-        data:[],
-        showData:[],
-        currentPage:1,
-        number:0
+let arr =["aa",'sas','asrada','ads','lsdf','ewr'];
+arr.sort((a,b)=>{
+    if(a>b){
+        return 1
     }
-};
+    if(a<b){
+        return -1
+    }
+    return 0
+});
 
-let {data} = state.selected;
-
-console.log(data);
+console.log(arr);
