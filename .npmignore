@@ -3,4 +3,4 @@
 src*
 www*
 webpack.config.js
-
+webpack.config.prod.js
