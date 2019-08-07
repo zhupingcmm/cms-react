@@ -5,6 +5,7 @@ import PaginationTable from "../../src/component/table/PaginationTable";
 import CheckBox from 'grommet/components/CheckBox';
 import Select from 'grommet/components/Select';
 import {makeData} from "./Util";
+import Button from 'grommet/components/Button';
 
 
 function getColumns(){
@@ -50,6 +51,17 @@ export class StaticPaginationTable extends React.Component {
         console.log(selectAll, data)
     };
 
+    handleOncontextmenu =(e)=>{
+        e.preventDefault();
+    };
+
+    handleOnmouseup=(oEvent)=>{
+        if (!oEvent) oEvent=window.event;
+        if (oEvent.button===2) {
+            console.log('鼠标右击了')
+        }
+    };
+
 
 
     render() {
@@ -80,6 +92,7 @@ export class StaticPaginationTable extends React.Component {
             <Box>
                 <Box direction="row">
                     <CheckBox  label = "showSelected" defaultChecked={showSelected} onClick={this.handleChangeShowSelected}/>
+                    <Button oncontextmenu={this.handleOncontextmenu} onmouseup={this.handleOnmouseup}/>
                 </Box>
                 <PaginationTable
                     data={data}

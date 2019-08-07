@@ -49,20 +49,6 @@ module.exports={
                     },
                 ],
             },
-
-            // {
-            //     test:/\.(png|jpg|gif|jpeg)/,
-            //     use: [
-            //         {
-            //             loader: "url-loader",
-            //             options: {
-            //                 limit:1024
-            //             }
-            //         }
-            //     ]
-            //
-            // },
-
             {
                 test:/\.(png|jpg|gif|jpegeot|woff|woff2|svg|ttf|eot)/,
                 use: [
@@ -93,7 +79,30 @@ module.exports={
     devServer: {
         contentBase:'./dist',
         hot:true,
-        port:4000,
+        port:9000,
         open:true
-    }
+    },
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+            minSize: 30000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            automaticNameDelimiter: '~',
+            name: true,
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10
+                },
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true
+                },
+
+            }
+        }
+    },
 };

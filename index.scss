@@ -28,16 +28,16 @@
     width: 60%;
     height: 100%;
 
-    & .next-button{
-      & .grommetux-button__icon{
-        float: right;
-      }
-    }
-    & .next-button:after{
-      content: '';
-      display: block;
-      clear: both;
-    }
+    //& .next-button{
+    //  & .grommetux-button__icon{
+    //    float: right;
+    //  }
+    //}
+    //& .next-button:after{
+    //  content: '';
+    //  display: block;
+    //  clear: both;
+    //}
   }
 
   & .page:after{

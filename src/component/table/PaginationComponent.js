@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import Button from 'grommet/components/Button';
 import LinkPreviousIcon from 'grommet/components/icons/base/LinkPrevious';
 import LinkNextIcon from 'grommet/components/icons/base/LinkNext';
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
 import Box from 'grommet/components/Box';
 
 class PaginationComponent extends Component{

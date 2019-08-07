@@ -33,6 +33,7 @@ export class PaginationTable extends React.Component {
             data: undefined,
             showData:undefined,
             columns: undefined,
+            className:"-striped -highlight",
             selection: [],
             selectAll: undefined,
             selectType: "checkbox",
@@ -61,7 +62,7 @@ export class PaginationTable extends React.Component {
 
     componentWillMount() {
         //update showSelected
-        if(this.props.showSelected){
+        if(!this.props.showSelected){
             this.setState({showSelected:this.props.showSelected})
         }
         //update dynamic
@@ -322,13 +323,16 @@ export class PaginationTable extends React.Component {
             return <ReactTable
                 manual
                 {...extraProps}
+                //className="-striped -highlight"
             />
         }
 
         return <SelectTable
                 ref={r => (this.selectTable = r)}
                 manual
-                {...extraProps}/>
+                {...extraProps}
+                //className="-striped -highlight"
+        />
             };
 
     render() {
@@ -354,10 +358,12 @@ export class PaginationTable extends React.Component {
             loading,
             selected,
             showSelected,
+            className
         } = this.state;
 
         const {
-            totalNumber
+            totalNumber,
+            pivotBy
         }= this.props;
 
         const extraProps = {
@@ -373,7 +379,9 @@ export class PaginationTable extends React.Component {
             pageSizeOptions,
             showPagination,
             loading,
-            onSortedChange
+            onSortedChange,
+            pivotBy,
+            className
         };
 
         let table = this.getTable(showSelected, extraProps);
