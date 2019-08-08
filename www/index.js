@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import ReactDOM from 'react-dom';
 // import '../index.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import '../index.scss'
+import './index.scss'
 // import 'bootstrap/dist/css/bootstrap-grid.css';
 // import 'bootstrap/dist/css/bootstrap-reboot.css';
 import {HashRouter as Router, Route,Link,Redirect,Switch} from 'react-router-dom';
